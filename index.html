@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mitades</title>
+    <meta name="description" content="Minijuegos para dos MacBook juntos que se ven como una sola pantalla." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='4' y='14' width='26' height='36' rx='4' fill='%233fd7ff'/><rect x='34' y='14' width='26' height='36' rx='4' fill='%23ff4f86'/></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+
+    <main id="lobby">
+      <div class="logo" aria-label="Mitades">
+        <span class="l">MITA</span><span class="seam"></span><span class="r">DES</span>
+      </div>
+      <p class="tag">Dos MacBook juntos. Una sola pantalla. Cinco minijuegos.</p>
+
+      <section id="start" class="panel">
+        <label class="field">
+          <span>Tu nombre</span>
+          <input id="name" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Jugador" />
+        </label>
+        <div class="choices">
+          <div class="choice">
+            <h2>Crear sala</h2>
+            <p>En el portátil que va a la izquierda (o el que quieras).</p>
+            <button id="create" class="btn primary">Crear sala</button>
+          </div>
+          <div class="choice">
+            <h2>Unirme</h2>
+            <p>Escribe el código que sale en el otro portátil.</p>
+            <div class="joinrow">
+              <input id="code" maxlength="4" autocomplete="off" spellcheck="false" placeholder="CÓDIGO" />
+              <button id="join" class="btn">Entrar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="hostbox" class="panel" hidden>
+        <p class="small">Código de la sala</p>
+        <div id="codeShow" class="code">····</div>
+        <p class="small">En el otro MacBook abre esta misma web y escribe el código, o abre este enlace:</p>
+        <p><a id="shareLink" class="share" href="#" target="_blank" rel="noopener"></a></p>
+        <p id="lanHint" class="small hint" hidden>
+          Estás en <b>localhost</b>: en el otro Mac no funcionará esa dirección. Usa la de red que sale en la terminal
+          al arrancar (algo como <b>http://192.168.1.20:5190</b>) o la versión publicada.
+        </p>
+        <div class="sides">
+          <span>Este portátil va a la</span>
+          <button class="btn side on" data-side="0">Izquierda</button>
+          <button class="btn side" data-side="1">Derecha</button>
+        </div>
+        <p class="waiting"><span class="dot"></span> Esperando al otro portátil…</p>
+        <button id="cancel" class="btn ghost">Cancelar</button>
+      </section>
+
+      <p id="status" role="status"></p>
+
+      <details class="help">
+        <summary>Cómo se monta</summary>
+        <ol>
+          <li>Poned los dos MacBook uno pegado al otro, pantalla con pantalla y a la misma altura.</li>
+          <li>En uno pulsa <b>Crear sala</b>; en el otro escribe el código y pulsa <b>Entrar</b>.</li>
+          <li>Pulsad <b>F</b> en los dos para ponerlos en pantalla completa.</li>
+          <li>Si las líneas no cuadran entre pantallas, entrad en <b>Ajustar pantallas</b> desde el menú.</li>
+          <li>Cada uno juega con su teclado (flechas o WASD + espacio) y su trackpad.</li>
+        </ol>
+      </details>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

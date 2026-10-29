@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mitades · prueba en un solo Mac</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #2a2a30;
+        color: #ccc;
+        font: 14px system-ui, sans-serif;
+        overflow: hidden;
+      }
+      #wrap {
+        position: absolute;
+        inset: 0 0 34px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      iframe {
+        border: 0;
+        background: #000;
+        border-radius: 4px;
+        box-shadow: 0 0 0 10px #111;
+      }
+      #gap {
+        flex: none;
+      }
+      #help {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 8px;
+        text-align: center;
+      }
+      b {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <iframe id="L" title="Portátil izquierdo"></iframe>
+      <div id="gap"></div>
+      <iframe id="R" title="Portátil derecho"></iframe>
+    </div>
+    <div id="help">
+      Simulación de los dos portátiles en uno. Izquierda: <b>WASD</b> + <b>espacio</b> · <b>X</b> arma · <b>Q</b> menú — Derecha:
+      <b>flechas</b> + <b>Enter</b> · <b>Shift</b> arma · <b>Retroceso</b> menú. El ratón va a la pantalla sobre la que esté.
+    </div>
+    <script>
+      const room = 'T' + Math.random().toString(36).slice(2, 6).toUpperCase()
+      const L = document.getElementById('L')
+      const R = document.getElementById('R')
+      const gap = document.getElementById('gap')
+      L.src = `./index.html?local=${room}&auto=host&nombre=Ana`
+      R.src = `./index.html?local=${room}&auto=join&nombre=Luis`
+
+      function fit() {
+        const g = 22
+        const W = innerWidth - 60 - g
+        const Hh = innerHeight - 70
+        let w = W / 2
+        let h = w / 1.6
+        if (h > Hh) {
+          h = Hh
+          w = h * 1.6
+        }
+        for (const f of [L, R]) {
+          f.style.width = w + 'px'
+          f.style.height = h + 'px'
+        }
+        gap.style.width = g + 'px'
+      }
+      fit()
+      addEventListener('resize', fit)
+
+      const LEFT = { KeyA: 1, KeyD: 1, KeyW: 1, KeyS: 1, Space: 1, KeyX: 1, KeyQ: 1, ShiftLeft: 1 }
+      const RIGHT = { ArrowLeft: 1, ArrowRight: 1, ArrowUp: 1, ArrowDown: 1, Enter: 1, ShiftRight: 1, Backspace: 1 }
+      const RIGHT_AS = { ShiftRight: 'KeyX', Backspace: 'KeyQ' }
+      function fwd(e, down) {
+        if (e.repeat) return e.preventDefault()
+        const target = LEFT[e.code] ? L : RIGHT[e.code] ? R : null
+        if (!target) return
+        e.preventDefault()
+        target.contentWindow.postMessage({ mitadesKey: RIGHT_AS[e.code] || e.code, key: e.key, down }, '*')
+      }
+      addEventListener('keydown', e => fwd(e, true))
+      addEventListener('keyup', e => fwd(e, false))
+      // Si se hace clic dentro de una pantalla, devolvemos el foco aquí para repartir teclas
+      setInterval(() => {
+        if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.focus()
+      }, 500)
+    </script>
+  </body>
+</html>
